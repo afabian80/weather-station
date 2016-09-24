@@ -17,6 +17,7 @@ SPI_PORT = 0
 SPI_DEVICE = 0
 
 basedir = os.path.dirname(os.path.realpath(__file__))
+subprocess.call([os.path.join(basedir, 'update.sh')])
 
 disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
 
@@ -28,8 +29,6 @@ draw.rectangle((0,0,LCD.LCDWIDTH,LCD.LCDHEIGHT), outline=255, fill=255)
 
 big_font   = ImageFont.truetype(os.path.join('/usr/share/fonts/truetype/freefont/', 'FreeSansBold.ttf'), bigfontsize)
 small_font = ImageFont.load_default()
-
-subprocess.call([os.path.join(basedir, 'update.sh')])
 
 with open(os.path.join(basedir, 'data.json')) as data_file:
     data = json.load(data_file)
