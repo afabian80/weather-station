@@ -89,5 +89,5 @@ ENV/
 .ropeproject
 
 # manually added
-api.key
-data.json
+/*.key
+/*.json

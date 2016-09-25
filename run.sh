@@ -2,7 +2,7 @@
 
 date
 
-/usr/bin/python /home/pi/Documents/Python/nokia5110/weather.py
+/usr/bin/python /home/pi/Documents/Python/nokia5110/wunderground-weather.py
 
-logger "weather.py executed"
+logger "wunderground-weather.py executed"
 
