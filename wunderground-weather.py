@@ -30,10 +30,10 @@ draw.rectangle((0,0,LCD.LCDWIDTH,LCD.LCDHEIGHT), outline=255, fill=255)
 big_font   = ImageFont.truetype(os.path.join('/usr/share/fonts/truetype/freefont/', 'FreeSansBold.ttf'), bigfontsize)
 small_font = ImageFont.load_default()
 
-with open('wunderground-conditions-data.json') as conditions_data_file:
+with open(os.path.join(basedir, 'wunderground-conditions-data.json')) as conditions_data_file:
     conditions_data = json.load(conditions_data_file)
 
-with open('wunderground-forecast-data.json') as forecast_data_file:
+with open(os.path.join(basedir, 'wunderground-forecast-data.json')) as forecast_data_file:
     forecast_data = json.load(forecast_data_file)
 
 temp_num = float(conditions_data[u'current_observation'][u'temp_c'])
