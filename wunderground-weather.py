@@ -40,9 +40,9 @@ temp_num = float(conditions_data[u'current_observation'][u'temp_c'])
 temp_cur = "%2.0f" % temp_num
 feelslike_num = float(conditions_data[u'current_observation'][u'feelslike_c'])
 feelslike_str = "/ %2.0f" % feelslike_num
-condition_now = str(conditions_data[u'current_observation'][u'weather']) 
+condition_now = str(conditions_data[u'current_observation'][u'icon']) 
 condition_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'conditions']) 
-epoch = int(conditions_data[u'current_observation'][u'observation_epoch'])
+epoch = int(conditions_data[u'current_observation'][u'local_epoch'])
 utime = time.strftime('%H:%M', time.localtime(epoch))
 
 print(temp_cur)
