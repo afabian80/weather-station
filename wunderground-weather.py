@@ -1,63 +1,78 @@
+from oled.device import ssd1306
+from oled.render import canvas
+from PIL import Image, ImageFont, ImageDraw, ImageOps
 import time
-import Adafruit_Nokia_LCD as LCD
-import Adafruit_GPIO.SPI as SPI
-
-import Image
-import ImageDraw
-import ImageFont
+import datetime
 import subprocess
 import json
 import os
 
-bigfontsize = 22
+device = ssd1306(port=1, address=0x3c)
+ttf = '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'
+bigFont   = ImageFont.truetype(ttf, 64)
+smallFont = ImageFont.truetype(ttf, 42)
+tinyFont = ImageFont.truetype(ttf, 12)
 
-DC = 23
-RST = 24
-SPI_PORT = 0
-SPI_DEVICE = 0
+def main():
+    print("Weather station started")
+            
+    while True:
+        basedir = os.path.dirname(os.path.realpath(__file__))
+        updateFile = os.path.join(basedir, 'update_tick')
+        if os.path.isfile(updateFile):
+            print "Update file found, calling weather-update"
+            subprocess.call([os.path.join(basedir, 'wunderground-update.sh')])
+            print "Deleting update file"
+            os.unlink(updateFile)
 
-basedir = os.path.dirname(os.path.realpath(__file__))
-subprocess.call([os.path.join(basedir, 'wunderground-update.sh')])
+        with open(os.path.join(basedir, 'wunderground-conditions-data.json')) as conditions_data_file:
+            conditions_data = json.load(conditions_data_file)
 
-disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
+        with open(os.path.join(basedir, 'wunderground-forecast-data.json')) as forecast_data_file:
+            forecast_data = json.load(forecast_data_file)
 
-disp.begin(contrast=40)
+        temp_num = float(conditions_data[u'current_observation'][u'temp_c'])
+        temp_cur = "%2.0f" % temp_num
+        feelslike_num = float(conditions_data[u'current_observation'][u'feelslike_c'])
+        feelslike_str = "= %2.0f" % feelslike_num
+        icon = str(conditions_data[u'current_observation'][u'icon']) 
+        humidity = conditions_data[u'current_observation'][u'relative_humidity'] 
+        icon_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'icon']) 
+        epoch = int(conditions_data[u'current_observation'][u'local_epoch'])
+        utime = time.strftime('%H:%M', time.localtime(epoch))
 
-image = Image.new('1', (LCD.LCDWIDTH, LCD.LCDHEIGHT))
-draw = ImageDraw.Draw(image)
-draw.rectangle((0,0,LCD.LCDWIDTH,LCD.LCDHEIGHT), outline=255, fill=255)
+        logo = Image.open("icons/" + icon + ".bmp")
+        logoToday = Image.open("icons/" + icon_today + ".bmp")
+        
+        print(temp_cur)
+        print(feelslike_str)
+        print(icon)
+        print(icon_today)
 
-big_font   = ImageFont.truetype(os.path.join('/usr/share/fonts/truetype/freefont/', 'FreeSansBold.ttf'), bigfontsize)
-small_font = ImageFont.load_default()
+        with canvas(device) as drawTemp:
+            drawTemp.text((20,0), temp_cur + u"\u00B0", font=bigFont, fill=255)
+            drawTemp.text((0,0), "" + utime, font=tinyFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawFeelslike:
+            drawFeelslike.text((10,8), feelslike_str + u"\u00B0", font=smallFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawHumidity:
+            drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawLogo:
+            drawLogo.bitmap((32,0), logo, fill=1)
+            drawLogo.text((0,0), "Now:", font=tinyFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawForecastLogo:
+            drawForecastLogo.bitmap((32,0), logoToday, fill=1)
+            drawForecastLogo.text((0,0), "Today:", font=tinyFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawTime:
+            now = datetime.datetime.now()
+            drawTime.text((10,8), "%02d" % now.hour + ":" + "%02d" % now.minute, font=smallFont, fill=255)
+        time.sleep(1)
 
-with open(os.path.join(basedir, 'wunderground-conditions-data.json')) as conditions_data_file:
-    conditions_data = json.load(conditions_data_file)
 
-with open(os.path.join(basedir, 'wunderground-forecast-data.json')) as forecast_data_file:
-    forecast_data = json.load(forecast_data_file)
-
-temp_num = float(conditions_data[u'current_observation'][u'temp_c'])
-temp_cur = "%2.0f" % temp_num
-feelslike_num = float(conditions_data[u'current_observation'][u'feelslike_c'])
-feelslike_str = "/ %2.0f" % feelslike_num
-condition_now = str(conditions_data[u'current_observation'][u'icon']) 
-condition_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'conditions']) 
-epoch = int(conditions_data[u'current_observation'][u'local_epoch'])
-utime = time.strftime('%H:%M', time.localtime(epoch))
-
-print(temp_cur)
-print(feelslike_str)
-print(condition_now)
-print(condition_today)
-
-draw.text((0,0), temp_cur, font=big_font)
-draw.text((36,0), feelslike_str, font=big_font)
-draw.text((0,20), condition_now, font=small_font)
-draw.text((0,30), condition_today, font=small_font)
-draw.text((45,39), utime, font=small_font)
-
-disp.image(image)
-disp.display()
-
-print("Done.")
+if __name__ == "__main__":
+    main()
 
