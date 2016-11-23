@@ -38,6 +38,8 @@ def main():
         icon = str(conditions_data[u'current_observation'][u'icon']) 
         humidity = conditions_data[u'current_observation'][u'relative_humidity'] 
         icon_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'icon']) 
+        high_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'high'][u'celsius']) 
+        low_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'low'][u'celsius']) 
         epoch = int(conditions_data[u'current_observation'][u'local_epoch'])
         utime = time.strftime('%H:%M', time.localtime(epoch))
 
@@ -48,6 +50,7 @@ def main():
         print(feelslike_str)
         print(icon)
         print(icon_today)
+        print(high_today)
 
         with canvas(device) as drawTemp:
             drawTemp.text((20,0), temp_cur + u"\u00B0", font=bigFont, fill=255)
@@ -58,6 +61,12 @@ def main():
         time.sleep(1)
         with canvas(device) as drawHumidity:
             drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawHigh:
+            drawHigh.text((10,8), u"\u2191  " + high_today + u"\u00B0", font=smallFont, fill=255)
+        time.sleep(1)
+        with canvas(device) as drawLow:
+            drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=smallFont, fill=255)
         time.sleep(1)
         with canvas(device) as drawLogo:
             drawLogo.bitmap((32,0), logo, fill=1)
