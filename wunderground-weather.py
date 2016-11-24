@@ -88,7 +88,7 @@ def main():
         except:
             with canvas(device) as drawError:
                 drawError.text((0,0), "Error!", font=littleFont, fill=255)
-                drawError.text((0,50), time.strftime('%H:%M', time.localtime(epoch)), font=littleFont, fill=255)
+                drawError.text((0,40), time.strftime('%H:%M', time.localtime(epoch)), font=littleFont, fill=255)
             time.sleep(60)
 
 if __name__ == "__main__":
