@@ -11,6 +11,7 @@ device = ssd1306(port=1, address=0x3c)
 ttf = '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'
 bigFont   = ImageFont.truetype(ttf, 64)
 smallFont = ImageFont.truetype(ttf, 42)
+littleFont = ImageFont.truetype(ttf, 20)
 tinyFont = ImageFont.truetype(ttf, 12)
 delay = 1.5
 
@@ -23,6 +24,8 @@ def main():
         try:
             if os.path.isfile(updateFile):
                 print "Update file found, calling weather-update"
+                with canvas(device) as drawUpdate:
+                    drawUpdate.text((0,0), "Updating...", font=littleFont, fill=255)
                 subprocess.call([os.path.join(basedir, 'wunderground-update.sh')])
                 print "Deleting update file"
                 os.unlink(updateFile)
@@ -84,8 +87,8 @@ def main():
             time.sleep(delay)
         except:
             with canvas(device) as drawError:
-                drawError.text((0,0), "error", font=smallFont, fill=255)
-                drawError.text((0,50), time.strftime('%H:%M', time.localtime(epoch)), font=tinyFont, fill=255)
+                drawError.text((0,0), "Error!", font=littleFont, fill=255)
+                drawError.text((0,50), time.strftime('%H:%M', time.localtime(epoch)), font=littleFont, fill=255)
             time.sleep(60)
 
 if __name__ == "__main__":
