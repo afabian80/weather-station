@@ -42,6 +42,7 @@ def main():
             feelslike_str = "= %2.0f" % feelslike_num
             icon = str(conditions_data[u'current_observation'][u'icon'])
             humidity = conditions_data[u'current_observation'][u'relative_humidity']
+            wind = str(conditions_data[u'current_observation'][u'wind_kph'])
             icon_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'icon'])
             high_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'high'][u'celsius'])
             low_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'low'][u'celsius'])
@@ -72,6 +73,10 @@ def main():
             time.sleep(delay)
             with canvas(device) as drawLow:
                 drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=smallFont, fill=255)
+            time.sleep(delay)
+            with canvas(device) as drawWind:
+                drawWind.text((30,0), wind, font=smallFont, fill=255)
+                drawWind.text((60,40), u" km/h", font=littleFont, fill=255)
             time.sleep(delay)
             with canvas(device) as drawLogo:
                 drawLogo.bitmap((32,0), logo, fill=1)
