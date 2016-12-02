@@ -9,10 +9,11 @@ import os
 
 device = ssd1306(port=1, address=0x3c)
 ttf = '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'
-bigFont   = ImageFont.truetype(ttf, 64)
-smallFont = ImageFont.truetype(ttf, 42)
-littleFont = ImageFont.truetype(ttf, 20)
-tinyFont = ImageFont.truetype(ttf, 12)
+font64 = ImageFont.truetype(ttf, 64)
+font42 = ImageFont.truetype(ttf, 42)
+font36 = ImageFont.truetype(ttf, 36)
+font20 = ImageFont.truetype(ttf, 20)
+font12 = ImageFont.truetype(ttf, 12)
 delay = 1.5
 
 def main():
@@ -25,7 +26,7 @@ def main():
             if os.path.isfile(updateFile):
                 print "Update file found, calling weather-update"
                 with canvas(device) as drawUpdate:
-                    drawUpdate.text((0,0), "Updating...", font=littleFont, fill=255)
+                    drawUpdate.text((0,0), "Updating...", font=font20, fill=255)
                 subprocess.call([os.path.join(basedir, 'wunderground-update.sh')])
                 print "Deleting update file"
                 os.unlink(updateFile)
@@ -61,42 +62,42 @@ def main():
             print(high_today)
 
             with canvas(device) as drawTemp:
-                drawTemp.text((20,0), temp_cur + u"\u00B0", font=bigFont, fill=255)
-                drawTemp.text((0,0), "" + utime, font=tinyFont, fill=255)
+                drawTemp.text((20,0), temp_cur + u"\u00B0", font=font64, fill=255)
+                drawTemp.text((0,0), "" + utime, font=font12, fill=255)
             time.sleep(delay)
             with canvas(device) as drawFeelslike:
-                drawFeelslike.text((10,8), feelslike_str + u"\u00B0", font=smallFont, fill=255)
+                drawFeelslike.text((10,8), feelslike_str + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
             with canvas(device) as drawHigh:
-                drawHigh.text((10,8), u"\u2191  " + high_today + u"\u00B0", font=smallFont, fill=255)
+                drawHigh.text((10,8), u"\u2191  " + high_today + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
             with canvas(device) as drawLow:
-                drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=smallFont, fill=255)
+                drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
             with canvas(device) as drawHumidity:
-                drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
+                drawHumidity.text((20,8), humidity, font=font42, fill=255)
             time.sleep(delay)
             with canvas(device) as drawWind:
-                drawWind.text((0,0), wind, font=smallFont, fill=255)
-                drawWind.text((60,0), u"\u2191" + gust, font=smallFont, fill=255)
-                drawWind.text((40,40), wind_dir, font=littleFont, fill=255)
-            time.sleep(delay)
+                drawWind.text((0,0), wind, font=font36, fill=255)
+                drawWind.text((55,0), u"\u2191" + gust, font=font36, fill=255)
+                drawWind.text((40,40), wind_dir, font=font20, fill=255)
+            time.sleep(delay*2)
             with canvas(device) as drawLogo:
                 drawLogo.bitmap((32,0), logo, fill=1)
-                drawLogo.text((0,0), "Now:", font=tinyFont, fill=255)
+                drawLogo.text((0,0), "Now:", font=font12, fill=255)
             time.sleep(delay)
             with canvas(device) as drawForecastLogo:
                 drawForecastLogo.bitmap((32,0), logoToday, fill=1)
-                drawForecastLogo.text((0,0), "Today:", font=tinyFont, fill=255)
+                drawForecastLogo.text((0,0), "Today:", font=font12, fill=255)
             time.sleep(delay)
             with canvas(device) as drawTime:
                 now = datetime.datetime.now()
-                drawTime.text((10,8), "%02d" % now.hour + ":" + "%02d" % now.minute, font=smallFont, fill=255)
+                drawTime.text((10,8), "%02d" % now.hour + ":" + "%02d" % now.minute, font=font42, fill=255)
             time.sleep(delay)
         except:
             with canvas(device) as drawError:
-                drawError.text((0,0), "Error!", font=littleFont, fill=255)
-                drawError.text((0,40), time.strftime('%H:%M', time.localtime(epoch)), font=littleFont, fill=255)
+                drawError.text((0,0), "Error!", font=font20, fill=255)
+                drawError.text((0,40), time.strftime('%H:%M', time.localtime(epoch)), font=font20, fill=255)
             os.mknod(updateFile)
             time.sleep(30)
 
