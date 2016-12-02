@@ -43,6 +43,8 @@ def main():
             icon = str(conditions_data[u'current_observation'][u'icon'])
             humidity = conditions_data[u'current_observation'][u'relative_humidity']
             wind = str(conditions_data[u'current_observation'][u'wind_kph'])
+            wind_dir = str(conditions_data[u'current_observation'][u'wind_dir'])
+            gust = str(conditions_data[u'current_observation'][u'wind_gust_kph'])
             icon_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'icon'])
             high_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'high'][u'celsius'])
             low_today = str(forecast_data[u'forecast'][u'simpleforecast'][u'forecastday'][0][u'low'][u'celsius'])
@@ -75,8 +77,9 @@ def main():
                 drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
             time.sleep(delay)
             with canvas(device) as drawWind:
-                drawWind.text((30,0), wind, font=smallFont, fill=255)
-                drawWind.text((60,40), u" km/h", font=littleFont, fill=255)
+                drawWind.text((0,0), wind, font=smallFont, fill=255)
+                drawWind.text((60,0), u"\u2191" + gust, font=smallFont, fill=255)
+                drawWind.text((40,40), wind_dir, font=littleFont, fill=255)
             time.sleep(delay)
             with canvas(device) as drawLogo:
                 drawLogo.bitmap((32,0), logo, fill=1)
