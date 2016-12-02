@@ -65,14 +65,14 @@ def main():
             with canvas(device) as drawFeelslike:
                 drawFeelslike.text((10,8), feelslike_str + u"\u00B0", font=smallFont, fill=255)
             time.sleep(delay)
-            with canvas(device) as drawHumidity:
-                drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
-            time.sleep(delay)
             with canvas(device) as drawHigh:
                 drawHigh.text((10,8), u"\u2191  " + high_today + u"\u00B0", font=smallFont, fill=255)
             time.sleep(delay)
             with canvas(device) as drawLow:
                 drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=smallFont, fill=255)
+            time.sleep(delay)
+            with canvas(device) as drawHumidity:
+                drawHumidity.text((20,8), humidity, font=smallFont, fill=255)
             time.sleep(delay)
             with canvas(device) as drawWind:
                 drawWind.text((30,0), wind, font=smallFont, fill=255)
