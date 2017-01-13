@@ -1,2 +1,14 @@
 # weather-station
-Display online weather info on a Nokia 5110 LCD display using an old raspberry pi
+Display online weather info on an SSD1306 Oled display. 
+Based on https://ssd1306.readthedocs.io/en/latest/intro.html.
+Small usage example in https://ssd1306.readthedocs.io/en/latest/_modules/oled/device.html
+
+Harware configuration:
+Used OLED display: http://www.banggood.com/0_96-Inch-4Pin-White-IIC-I2C-OLED-Display-Module-12864-LED-For-Arduino-p-958196.html
+Wiring: Connect Ground and 3.3V to the display from the Raspberry PI. The connect SCL to SCL pin on the PI and SDA to the SDA pin on the PI.
+
+Start: 
+* set up a cron job that runs init-update.sh periocially (e.g. every 10 minutes)
+* python wunderground-weather.py
+
+ 
