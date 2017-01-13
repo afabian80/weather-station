@@ -7,6 +7,7 @@ import datetime
 import subprocess
 import json
 import os
+import sys
 
 serial = i2c(port=1, address=0x3c)
 device = ssd1306(serial)
@@ -24,6 +25,7 @@ def main():
     while True:
         basedir = os.path.dirname(os.path.realpath(__file__))
         updateFile = os.path.join(basedir, 'update_tick')
+        icondir = os.path.join(basedir, 'icons')
         try:
             if os.path.isfile(updateFile):
                 print "Update file found, calling weather-update"
@@ -54,8 +56,8 @@ def main():
             epoch = int(conditions_data[u'current_observation'][u'local_epoch'])
             utime = time.strftime('%H:%M', time.localtime(epoch))
 
-            logo = Image.open("icons/" + icon + ".bmp")
-            logoToday = Image.open("icons/" + icon_today + ".bmp")
+            logo = Image.open(os.path.join(icondir,  icon + ".bmp"))
+            logoToday = Image.open(os.path.join(icondir, icon_today + ".bmp"))
 
             print(temp_cur)
             print(feelslike_str)
