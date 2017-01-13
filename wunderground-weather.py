@@ -1,3 +1,4 @@
+from oled.serial import i2c
 from oled.device import ssd1306
 from oled.render import canvas
 from PIL import Image, ImageFont, ImageDraw, ImageOps
@@ -7,7 +8,8 @@ import subprocess
 import json
 import os
 
-device = ssd1306(port=1, address=0x3c)
+serial = i2c(port=1, address=0x3c)
+device = ssd1306(serial)
 ttf = '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'
 font64 = ImageFont.truetype(ttf, 64)
 font42 = ImageFont.truetype(ttf, 42)
