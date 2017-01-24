@@ -12,12 +12,18 @@ import sys
 serial = i2c(port=1, address=0x3c)
 device = ssd1306(serial)
 ttf = '/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf'
-font64 = ImageFont.truetype(ttf, 64)
+font60 = ImageFont.truetype(ttf, 60)
 font42 = ImageFont.truetype(ttf, 42)
 font36 = ImageFont.truetype(ttf, 36)
 font20 = ImageFont.truetype(ttf, 20)
 font12 = ImageFont.truetype(ttf, 12)
-delay = 1.5
+delay = 1
+
+def displayTemp(temp):
+    with canvas(device) as c:
+        c.text((20,0), temp + u"\u00B0", font=font60, fill=255)
+    time.sleep(delay)
+
 
 def main():
     print("Weather station started")
@@ -65,35 +71,54 @@ def main():
             print(icon_today)
             print(high_today)
 
-            with canvas(device) as drawTemp:
-                drawTemp.text((20,0), temp_cur + u"\u00B0", font=font64, fill=255)
-                drawTemp.text((0,0), "" + utime, font=font12, fill=255)
-            time.sleep(delay)
+            displayTemp(temp_cur)
+
             with canvas(device) as drawFeelslike:
                 drawFeelslike.text((10,8), feelslike_str + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawHigh:
                 drawHigh.text((10,8), u"\u2191  " + high_today + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawLow:
                 drawLow.text((10,8), u"\u2193  " + low_today + u"\u00B0", font=font42, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawHumidity:
                 drawHumidity.text((20,8), humidity, font=font42, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawWind:
                 drawWind.text((0,0), wind, font=font36, fill=255)
                 drawWind.text((55,0), u"\u2191" + gust, font=font36, fill=255)
                 drawWind.text((40,40), wind_dir, font=font20, fill=255)
-            time.sleep(delay*2)
+            time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawLogo:
                 drawLogo.bitmap((32,0), logo, fill=1)
                 drawLogo.text((0,0), "Now:", font=font12, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawForecastLogo:
                 drawForecastLogo.bitmap((32,0), logoToday, fill=1)
                 drawForecastLogo.text((0,0), "Today:", font=font12, fill=255)
             time.sleep(delay)
+
+            displayTemp(temp_cur)
+
             with canvas(device) as drawTime:
                 now = datetime.datetime.now()
                 drawTime.text((10,8), "%02d" % now.hour + ":" + "%02d" % now.minute, font=font42, fill=255)
